@@ -1,0 +1,7 @@
+# shell automation security maintenance
+Workspace Directory: /Users/ryandavidoates/scripts
+Key Files & Context:
+- homebrew_security.sh: Automates Homebrew security tasks, enhancing dependency security workflow.
+- magic-modular-maintence-of-shell.sh: Manages shell environment modularly, improving shell organization and efficiency workflow.
+Project Focus: Shell scripting for system administration, security, and environment management.
+
