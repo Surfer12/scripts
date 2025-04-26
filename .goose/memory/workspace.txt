@@ -5,3 +5,10 @@ Key Files & Context:
 - magic-modular-maintence-of-shell.sh: Manages shell environment modularly, improving shell organization and efficiency workflow.
 Project Focus: Shell scripting for system administration, security, and environment management.
 
+# scripts maintenance security
+Maintenance Scripts:
+- homebrew_security.sh: Automates Homebrew security and maintenance tasks
+- magic-modular-maintence-of-shell.sh: Comprehensive shell environment maintenance
+- Configuration files added to ~/.config/
+- README.md provides usage and configuration instructions
+

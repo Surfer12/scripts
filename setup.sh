@@ -1,3 +1,4 @@
+#!/bin/zsh
 #!/bin/bash
 #
 # Setup Script for Scripts Collection
