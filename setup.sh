@@ -1,24 +1,31 @@
-#!/bin/zsh
-#!/bin/bash
-#
-# Setup Script for Scripts Collection
-# This script installs dependencies and configures settings for all scripts in the collection.
-#
+#!/usr/bin/env zsh
+# macOS Setup Script for Scripts Collection
+# Compatible with Zsh and Bash on macOS
 
-# Text formatting
-BOLD="\033[1m"
-GREEN="\033[0;32m"
-YELLOW="\033[0;33m"
-RED="\033[0;31m"
-BLUE="\033[0;34m"
-NC="\033[0m" # No Color
+# Detect shell and set appropriate commands
+if [[ -n "$ZSH_VERSION" ]]; then
+    CURRENT_SHELL="zsh"
+elif [[ -n "$BASH_VERSION" ]]; then
+    CURRENT_SHELL="bash"
+else
+    echo "Unsupported shell. Please use Zsh or Bash."
+    exit 1
+fi
 
-# Configuration file
-CONFIG_FILE="$HOME/.scripts_config"
-SCRIPTS_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
+# Text formatting (compatible with both Zsh and Bash)
+BOLD=$(tput bold)
+GREEN=$(tput setaf 2)
+YELLOW=$(tput setaf 3)
+RED=$(tput setaf 1)
+BLUE=$(tput setaf 4)
+NC=$(tput sgr0) # No Color
 
-# Default configuration values
-DEFAULT_WIRESHARK_CAPTURE_DIR="$HOME/wireshark_speedtests"
+# macOS-specific configuration file
+CONFIG_FILE="$HOME/.macos_scripts_config"
+SCRIPTS_DIR="$( cd "$( dirname "${(%):-%x}" )" && pwd )"  # Zsh-compatible dirname
+
+# Default configuration values (macOS-specific)
+DEFAULT_WIRESHARK_CAPTURE_DIR="$HOME/Documents/Wireshark_Captures"
 DEFAULT_CAPTURE_DURATION=30
 DEFAULT_MAGIC_TOOL_PATH="/usr/local/bin/magic"
 DEFAULT_HOMEBREW_CLEANUP=true
@@ -27,69 +34,64 @@ DEFAULT_HOMEBREW_UPGRADE_ALL=true
 
 # Function to print section headers
 print_header() {
-    echo -e "\n${BOLD}${BLUE}$1${NC}\n"
+    printf "\n${BOLD}${BLUE}%s${NC}\n" "$1"
 }
 
 # Function to print success messages
 print_success() {
-    echo -e "${GREEN}✓ $1${NC}"
+    printf "${GREEN}✓ %s${NC}\n" "$1"
 }
 
 # Function to print warning messages
 print_warning() {
-    echo -e "${YELLOW}! $1${NC}"
+    printf "${YELLOW}! %s${NC}\n" "$1"
 }
 
 # Function to print error messages
 print_error() {
-    echo -e "${RED}✗ $1${NC}"
+    printf "${RED}✗ %s${NC}\n" "$1"
 }
 
-# Function to check if a command exists
+# macOS-compatible command existence check
 command_exists() {
     command -v "$1" &> /dev/null
 }
 
 # Function to create or update configuration
 create_config() {
-    print_header "Creating configuration file"
+    print_header "Creating macOS Configuration File"
     
     # Check if config file exists
-    if [ -f "$CONFIG_FILE" ]; then
+    if [[ -f "$CONFIG_FILE" ]]; then
         print_warning "Configuration file already exists. Loading existing values..."
         source "$CONFIG_FILE"
     fi
     
-    # Ask for configuration values or use defaults/existing
-    echo -e "${BOLD}Please configure your settings:${NC}"
+    # Prompt for configuration (macOS-style)
+    echo -e "${BOLD}Please configure your macOS script settings:${NC}"
     
-    # Wireshark capture directory
+    # Use read with -p for macOS compatibility
     read -p "Wireshark capture directory [${WIRESHARK_CAPTURE_DIR:-$DEFAULT_WIRESHARK_CAPTURE_DIR}]: " input
     WIRESHARK_CAPTURE_DIR=${input:-${WIRESHARK_CAPTURE_DIR:-$DEFAULT_WIRESHARK_CAPTURE_DIR}}
     
-    # Capture duration
     read -p "Default capture duration in seconds [${CAPTURE_DURATION:-$DEFAULT_CAPTURE_DURATION}]: " input
     CAPTURE_DURATION=${input:-${CAPTURE_DURATION:-$DEFAULT_CAPTURE_DURATION}}
     
-    # Magic tool path
     read -p "Path to magic tool [${MAGIC_TOOL_PATH:-$DEFAULT_MAGIC_TOOL_PATH}]: " input
     MAGIC_TOOL_PATH=${input:-${MAGIC_TOOL_PATH:-$DEFAULT_MAGIC_TOOL_PATH}}
     
-    # Homebrew cleanup
     read -p "Enable Homebrew cleanup (true/false) [${HOMEBREW_CLEANUP:-$DEFAULT_HOMEBREW_CLEANUP}]: " input
     HOMEBREW_CLEANUP=${input:-${HOMEBREW_CLEANUP:-$DEFAULT_HOMEBREW_CLEANUP}}
     
-    # Homebrew auto-update
     read -p "Enable Homebrew auto-update (true/false) [${HOMEBREW_AUTO_UPDATE:-$DEFAULT_HOMEBREW_AUTO_UPDATE}]: " input
     HOMEBREW_AUTO_UPDATE=${input:-${HOMEBREW_AUTO_UPDATE:-$DEFAULT_HOMEBREW_AUTO_UPDATE}}
     
-    # Homebrew upgrade all
     read -p "Enable automatic upgrade of all Homebrew packages (true/false) [${HOMEBREW_UPGRADE_ALL:-$DEFAULT_HOMEBREW_UPGRADE_ALL}]: " input
     HOMEBREW_UPGRADE_ALL=${input:-${HOMEBREW_UPGRADE_ALL:-$DEFAULT_HOMEBREW_UPGRADE_ALL}}
     
-    # Write configuration to file
+    # Write configuration to file (macOS-specific)
     cat > "$CONFIG_FILE" << EOF
-# Scripts Collection Configuration
+# macOS Scripts Collection Configuration
 # Generated on $(date)
 
 # Wireshark settings
@@ -108,9 +110,9 @@ EOF
     print_success "Configuration saved to $CONFIG_FILE"
 }
 
-# Function to check and install Homebrew
+# macOS Homebrew installation
 install_homebrew() {
-    print_header "Checking for Homebrew"
+    print_header "Checking for Homebrew on macOS"
     
     if command_exists brew; then
         print_success "Homebrew is already installed"
@@ -132,7 +134,7 @@ install_homebrew() {
     print_success "Homebrew updated"
     
     # Install from Brewfile if it exists
-    if [ -f "$SCRIPTS_DIR/Brewfile" ]; then
+    if [[ -f "$SCRIPTS_DIR/Brewfile" ]]; then
         print_warning "Installing packages from Brewfile..."
         brew bundle --file="$SCRIPTS_DIR/Brewfile"
         print_success "Packages installed from Brewfile"
@@ -141,9 +143,9 @@ install_homebrew() {
     fi
 }
 
-# Function to install Wireshark and dependencies
+# macOS Wireshark installation
 install_wireshark() {
-    print_header "Installing Wireshark and dependencies"
+    print_header "Installing Wireshark on macOS"
     
     if command_exists tshark; then
         print_success "Wireshark is already installed"
@@ -164,11 +166,11 @@ install_wireshark() {
     print_success "Created capture directory: $WIRESHARK_CAPTURE_DIR"
 }
 
-# Function to check for magic tool
+# Check for magic tool (macOS version)
 check_magic_tool() {
-    print_header "Checking for magic tool"
+    print_header "Checking for magic tool on macOS"
     
-    if [ -f "$MAGIC_TOOL_PATH" ] || command_exists magic; then
+    if [[ -f "$MAGIC_TOOL_PATH" ]] || command_exists magic; then
         print_success "Magic tool found"
     else
         print_warning "Magic tool not found at $MAGIC_TOOL_PATH"
@@ -177,52 +179,37 @@ check_magic_tool() {
     fi
 }
 
-# Function to update scripts with configuration
+# Update scripts with configuration (macOS-specific)
 update_scripts() {
-    print_header "Updating scripts with configuration"
+    print_header "Updating scripts with macOS configuration"
+    
+    # Use gsed if available (brew install gnu-sed)
+    local SED_CMD=$(command_exists gsed && echo "gsed" || echo "sed")
     
     # Update wireshark__speedtest.sh
-    if [ -f "$SCRIPTS_DIR/wireshark__speedtest.sh" ]; then
-        sed -i.bak "s|OUTPUT_DIR=\"\$HOME/wireshark_speedtests\"|OUTPUT_DIR=\"$WIRESHARK_CAPTURE_DIR\"|g" "$SCRIPTS_DIR/wireshark__speedtest.sh"
-        sed -i.bak "s|DURATION=30|DURATION=$CAPTURE_DURATION|g" "$SCRIPTS_DIR/wireshark__speedtest.sh"
+    if [[ -f "$SCRIPTS_DIR/wireshark__speedtest.sh" ]]; then
+        "$SED_CMD" -i.bak "s|OUTPUT_DIR=\"\$HOME/wireshark_speedtests\"|OUTPUT_DIR=\"$WIRESHARK_CAPTURE_DIR\"|g" "$SCRIPTS_DIR/wireshark__speedtest.sh"
+        "$SED_CMD" -i.bak "s|DURATION=30|DURATION=$CAPTURE_DURATION|g" "$SCRIPTS_DIR/wireshark__speedtest.sh"
         rm -f "$SCRIPTS_DIR/wireshark__speedtest.sh.bak"
         print_success "Updated wireshark__speedtest.sh with new configuration"
     fi
-    
-    # Update magic-modular-maintence-of-shell.sh if needed
-    if [ -f "$SCRIPTS_DIR/magic-modular-maintence-of-shell.sh" ]; then
-        if ! command_exists magic && [ -f "$MAGIC_TOOL_PATH" ]; then
-            sed -i.bak "s|magic |$MAGIC_TOOL_PATH |g" "$SCRIPTS_DIR/magic-modular-maintence-of-shell.sh"
-            rm -f "$SCRIPTS_DIR/magic-modular-maintence-of-shell.sh.bak"
-            print_success "Updated magic-modular-maintence-of-shell.sh with correct path"
-        fi
-    fi
-    
-    # Update homebrew_security.sh if needed
-    if [ -f "$SCRIPTS_DIR/homebrew_security.sh" ]; then
-        if [ "$HOMEBREW_CLEANUP" = "false" ]; then
-            sed -i.bak '/brew cleanup/s/^/#/' "$SCRIPTS_DIR/homebrew_security.sh"
-            rm -f "$SCRIPTS_DIR/homebrew_security.sh.bak"
-            print_success "Disabled Homebrew cleanup in homebrew_security.sh"
-        fi
-    fi
 }
 
-# Function to make scripts executable
+# Make scripts executable (macOS version)
 make_executable() {
     print_header "Making scripts executable"
     
-    find "$SCRIPTS_DIR" -name "*.sh" -type f -exec chmod +x {} \;
+    find "$SCRIPTS_DIR" -type f -name "*.sh" -exec chmod +x {} \;
     print_success "All scripts are now executable"
 }
 
 # Main function
 main() {
-    print_header "Scripts Collection Setup"
-    echo "This script will install dependencies and configure your scripts collection."
+    print_header "macOS Scripts Collection Setup"
+    echo "This script will install dependencies and configure your macOS scripts collection."
     
-    # Check if running on macOS
-    if [ "$(uname)" != "Darwin" ]; then
+    # Strict macOS check
+    if [[ "$(uname -s)" != "Darwin" ]]; then
         print_error "This setup script is designed for macOS only."
         exit 1
     fi
@@ -245,7 +232,7 @@ main() {
     make_executable
     
     print_header "Setup Complete!"
-    echo "Your scripts collection is now ready to use."
+    echo "Your macOS scripts collection is now ready to use."
     echo "Configuration file: $CONFIG_FILE"
     echo "You can re-run this setup script at any time to update your configuration."
 }
