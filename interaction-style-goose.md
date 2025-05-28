@@ -1,3 +1,6 @@
+
+Closing session. Recorded to /Users/ryandavidoates/.local/share/goose/sessions/20250527_170950.jsonl
+
 Last login: Tue May 27 16:39:15 on console
 You have mail.
 ryandavidoates@Ryans-MacBook-Pro-3 ~ % ls
