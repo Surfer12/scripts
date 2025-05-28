@@ -12,3 +12,19 @@ Maintenance Scripts:
 - Configuration files added to ~/.config/
 - README.md provides usage and configuration instructions
 
+# ai scripts tools claude openai codex api
+AI Code Updater Script:
+- Script: ai_code_updater.sh - Manages and updates API access for Claude AI and OpenAI Codex
+- Documentation: AI_CODE_UPDATER_README.md
+- Features:
+  - Interactive menu interface when run without parameters
+  - Securely stores API keys in ~/.config/ai_code/
+  - Supports model selection for both services
+  - Provides status checking of API access
+  - Allows service-specific updates
+- Usage options:
+  - Run without parameters for interactive menu
+  - ./ai_code_updater.sh --all (update both services)
+  - ./ai_code_updater.sh -s (check status only)
+  - ./ai_code_updater.sh -c -k (update Claude API keys only)
+
