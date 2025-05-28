@@ -1,0 +1,31 @@
+# Style decision rules configuration
+knowledge_levels: [novice, intermediate, expert]
+emotions: [positive, neutral, negative]
+clarity_levels: [clear, ambiguous]
+urgency_levels: [high, normal, low]
+stakes_levels: [high, medium, low]
+
+# Default style strategy
+strategies:
+  - conditions:
+      knowledge: novice
+    style: explanatory
+  - conditions:
+      emotion: negative
+    style: reassuring_explanatory
+  - conditions:
+      knowledge: expert
+      clarity: clear
+      urgency: normal
+    style: concise
+  - conditions:
+      clarity: ambiguous
+      emotion: positive
+      urgency: low
+    style: invitational
+  - conditions:
+      clarity: ambiguous
+      urgency: high
+    style: rapid_clarify_then_minimal
+  - conditions: {}
+    style: hybrid
