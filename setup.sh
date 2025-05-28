@@ -184,7 +184,12 @@ update_scripts() {
     print_header "Updating scripts with macOS configuration"
     
     # Use gsed if available (brew install gnu-sed)
-    local SED_CMD=$(command_exists gsed && echo "gsed" || echo "sed")
+    local SED_CMD
+    if command_exists gsed; then
+        SED_CMD="gsed"
+    else
+        SED_CMD="sed"
+    fi
     
     # Update wireshark__speedtest.sh
     if [[ -f "$SCRIPTS_DIR/wireshark__speedtest.sh" ]]; then
