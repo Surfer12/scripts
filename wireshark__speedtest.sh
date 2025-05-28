@@ -1,4 +1,4 @@
-#!/bin/zsh
+#!/usr/bin/env bash
 # Save as wireshark_speedtest.sh and make executable with: chmod +x wireshark_speedtest.sh
 
 # Check for required tools

@@ -457,12 +457,13 @@ update_claude() {
           
           # Verify the model exists
           if echo "$models_response" | jq -e ".models[] | select(.name == \"$model_name\")" >/dev/null 2>&1; then
-            # Update the configuration with the new model
-            jq --arg model "$model_name" '.preferred_model = $model' "${CLAUDE_CONFIG}" > "${CLAUDE_CONFIG}.tmp" \
-              && mv "${CLAUDE_CONFIG}.tmp" "${CLAUDE_CONFIG}" \
-              || fail "Failed to update Claude configuration"
-            
-            log_message "success" "Updated preferred Claude model to: $model_name"
+            # Update the configuration with the new model using a clearer control flow
+            if jq --arg model "$model_name" '.preferred_model = $model' "${CLAUDE_CONFIG}" > "${CLAUDE_CONFIG}.tmp" \
+               && mv "${CLAUDE_CONFIG}.tmp" "${CLAUDE_CONFIG}"; then
+              log_message "success" "Updated preferred Claude model to: $model_name"
+            else
+              fail "Failed to update Claude configuration"
+            fi
           else
             log_message "error" "Invalid model name: $model_name"
           fi
@@ -526,12 +527,13 @@ update_openai() {
           
           # Verify the model exists
           if echo "$models_response" | jq -e ".data[] | select(.id == \"$model_name\")" >/dev/null 2>&1; then
-            # Update the configuration with the new model
-            jq --arg model "$model_name" '.model = $model' "${OPENAI_CONFIG}" > "${OPENAI_CONFIG}.tmp" \
-              && mv "${OPENAI_CONFIG}.tmp" "${OPENAI_CONFIG}" \
-              || fail "Failed to update OpenAI configuration"
-            
-            log_message "success" "Updated preferred OpenAI model to: $model_name"
+            # Update the configuration with the new model using a clearer control flow
+            if jq --arg model "$model_name" '.model = $model' "${OPENAI_CONFIG}" > "${OPENAI_CONFIG}.tmp" \
+               && mv "${OPENAI_CONFIG}.tmp" "${OPENAI_CONFIG}"; then
+              log_message "success" "Updated preferred OpenAI model to: $model_name"
+            else
+              fail "Failed to update OpenAI configuration"
+            fi
           else
             log_message "error" "Invalid model name: $model_name"
           fi
@@ -583,12 +585,13 @@ update_goose() {
           
           # Verify the model exists
           if echo "$models_response" | jq -e ".data[]? | select(.id == \"$model_name\")" >/dev/null 2>&1; then
-            # Update the configuration with the new model
-            jq --arg model "$model_name" '.model = $model' "${GOOSE_CONFIG}" > "${GOOSE_CONFIG}.tmp" \
-              && mv "${GOOSE_CONFIG}.tmp" "${GOOSE_CONFIG}" \
-              || fail "Failed to update Goose AI configuration"
-            
-            log_message "success" "Updated preferred Goose AI model to: $model_name"
+            # Update the configuration with the new model using a clearer control flow
+            if jq --arg model "$model_name" '.model = $model' "${GOOSE_CONFIG}" > "${GOOSE_CONFIG}.tmp" \
+               && mv "${GOOSE_CONFIG}.tmp" "${GOOSE_CONFIG}"; then
+              log_message "success" "Updated preferred Goose AI model to: $model_name"
+            else
+              fail "Failed to update Goose AI configuration"
+            fi
           else
             log_message "error" "Invalid model name: $model_name"
           fi

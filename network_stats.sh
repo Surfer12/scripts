@@ -1,5 +1,4 @@
-#!/bin/zsh
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 #
 # network_stats.sh - A script to display current network configuration and statistics
 #

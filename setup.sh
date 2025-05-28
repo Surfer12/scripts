@@ -1,4 +1,4 @@
-#!/usr/bin/env zsh
+#!/usr/bin/env bash
 # macOS Setup Script for Scripts Collection
 # Compatible with Zsh and Bash on macOS
 
@@ -22,7 +22,7 @@ NC=$(tput sgr0) # No Color
 
 # macOS-specific configuration file
 CONFIG_FILE="$HOME/.macos_scripts_config"
-SCRIPTS_DIR="$( cd "$( dirname "${(%):-%x}" )" && pwd )"  # Zsh-compatible dirname
+SCRIPTS_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"  # Determined script directory
 
 # Default configuration values (macOS-specific)
 DEFAULT_WIRESHARK_CAPTURE_DIR="$HOME/Documents/Wireshark_Captures"

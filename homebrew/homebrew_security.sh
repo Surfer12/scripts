@@ -1,5 +1,4 @@
-#!/bin/zsh
-#!/bin/bash
+#!/usr/bin/env bash
 
 # Homebrew Security Enhancement Script
 # ---------------------------------------
