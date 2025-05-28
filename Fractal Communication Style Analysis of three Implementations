@@ -1,0 +1,41 @@
+graph TD
+    A[Fractal Communication Style Analysis] --> B[Three Implementations]
+    
+    B --> C["Use 1: Claude test Response"]
+    B --> D["Use 2: Claude Commit Review"]
+    B --> E["Use 3: Goose/Grok 3"]
+    
+    C --> C1[Invitation-Heavy<br/>• Gentle, curious tone<br/>• Open-ended options<br/>• Emotional safety focus]
+    
+    D --> D1[Task-Focused<br/>• Professional, adaptive<br/>• Structured options<br/>• Context-appropriate depth]
+    
+    E --> E1[Education-Focused<br/>• Academic, thorough<br/>• Framework transparency<br/>• Systematic explanation]
+    
+    C1 --> F[Adaptation Spectrum]
+    D1 --> F
+    E1 --> F
+    
+    F --> G[Invitation ← → Task Focus ← → Education]
+    F --> H[Openness ← → Structure ← → Explanation]
+    
+    G --> I[Synthesis Opportunity]
+    H --> I
+    
+    I --> J[Hybrid Approach]
+    J --> K[Educational Transparency<br/>+<br/>Emotional Attunement]
+    
+    A --> L[Meta-Reflection Layer]
+    L --> M[Recursive Analysis<br/>Framework analyzing itself]
+    L --> N[Pattern Recognition<br/>Across implementations]
+    
+    K --> O[Potential Enhancements]
+    O --> P[When to use each approach]
+    O --> Q[Blend educational + invitational]
+    O --> R[Meta-framework for adaptation]
+    
+    style A fill:#e1f5fe
+    style I fill:#f3e5f5
+    style J fill:#e8f5e8
+    style L fill:#fff3e0
+    style M fill:#fff3e0
+    style N fill:#fff3e0

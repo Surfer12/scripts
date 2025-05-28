@@ -447,11 +447,12 @@ update_claude() {
           # Verify the model exists
           if echo "$models_response" | jq -e ".models[] | select(.name == \"$model_name\")" >/dev/null 2>&1; then
             # Update the configuration with the new model
-            jq --arg model "$model_name" '.preferred_model = $model' "${CLAUDE_CONFIG}" > "${CLAUDE_CONFIG}.tmp" \
-              && mv "${CLAUDE_CONFIG}.tmp" "${CLAUDE_CONFIG}" \
-              || fail "Failed to update Claude configuration"
-            
-            log_message "success" "Updated preferred Claude model to: $model_name"
+            if jq --arg model "$model_name" '.preferred_model = $model' "${CLAUDE_CONFIG}" > "${CLAUDE_CONFIG}.tmp"; then
+              mv "${CLAUDE_CONFIG}.tmp" "${CLAUDE_CONFIG}" || fail "Failed to update Claude configuration"
+              log_message "success" "Updated preferred Claude model to: $model_name"
+            else
+              fail "Failed to update Claude configuration"
+            fi
           else
             log_message "error" "Invalid model name: $model_name"
           fi
