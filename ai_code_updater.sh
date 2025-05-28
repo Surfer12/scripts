@@ -97,7 +97,18 @@ init_git_support() {
 commit_changes() {
   local message="$1"
   if [[ "$GIT_ENABLED" == "true" ]] && command -v git >/dev/null 2>&1 && [[ -d "$SCRIPT_DIR/.git" ]]; then
-    (cd "$SCRIPT_DIR" && git add . && git commit -m "$message" 2>/dev/null || true)
+    (
+      # Change directory into the script dir, but abort safely if it fails
+      cd "$SCRIPT_DIR" || return
+
+      # Stage all changes
+      git add .
+
+      # Attempt to commit; ignore error when there are no changes to commit
+      if ! git commit -m "$message" >/dev/null 2>&1; then
+        :  # no-op – commit had nothing to do or failed harmlessly
+      fi
+    )
     log_message "info" "Changes committed to git: $message"
   fi
 }
@@ -467,7 +478,11 @@ update_claude() {
   # Update Claude dependencies if Claude Code is installed
   if [[ -d "$HOME/.claude/local" ]]; then
     log_message "info" "Updating Claude dependencies..."
-    (cd "$HOME/.claude/local" && npm update @anthropic-ai/claude-code) || log_message "warning" "Failed to update Claude dependencies - may not be installed"
+    if (cd "$HOME/.claude/local" && npm update @anthropic-ai/claude-code); then
+      log_message "info" "Claude dependencies updated successfully"
+    else
+      log_message "warning" "Failed to update Claude dependencies - may not be installed"
+    fi
   else
     log_message "info" "Claude Code local installation not found - skipping dependency update"
   fi
