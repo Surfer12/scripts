@@ -8,6 +8,6 @@ version = "0.1.0"
 [tasks]
 
 [dependencies]
-openai = ">=1.82.1,<2"
-anthropic = ">=0.52.1,<0.53"
+openai = ">=1.86.0,<2"
+anthropic = ">=0.54.0,<0.55"
 pip = ">=25.1.1,<26"
